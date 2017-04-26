@@ -1,5 +1,5 @@
-coinbase-woocommerce
-====================
+coinbase-woocommerce Pro-Version by Zwilla
+==========================================
 
 
 
