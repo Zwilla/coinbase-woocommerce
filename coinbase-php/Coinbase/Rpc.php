@@ -1,6 +1,6 @@
 <?php
-
-class Coinbase_Rpc
+//@coauthor      Miguel Padilla (Zwilla) Copyright 2017
+class WC_Coinbase_Rpc
 {
     private $_requestor;
     private $authentication;
@@ -49,16 +49,16 @@ class Coinbase_Rpc
         // Get the authentication class and parse its payload into the HTTP header.
         $authenticationClass = get_class($this->_authentication);
         switch ($authenticationClass) {
-            case 'Coinbase_OAuthAuthentication':
+            case 'WC_Coinbase_OAuthAuthentication':
                 // Use OAuth
                 if(time() > $auth->tokens["expire_time"]) {
-                    throw new Coinbase_TokensExpiredException("The OAuth tokens are expired. Use refreshTokens to refresh them");
+                    throw new WC_Coinbase_TokensExpiredException("The OAuth tokens are expired. Use refreshTokens to refresh them");
                 }
 
                 $headers[] = 'Authorization: Bearer ' . $auth->tokens["access_token"];
                 break;
 
-            case 'Coinbase_ApiKeyAuthentication':
+            case 'WC_Coinbase_ApiKeyAuthentication':
                 // Use HMAC API key
                 $microseconds = sprintf('%0.0f',round(microtime(true) * 1000000));
 
@@ -73,14 +73,14 @@ class Coinbase_Rpc
                 $headers[] = "ACCESS_NONCE: $microseconds";
                 break;
 
-            case 'Coinbase_SimpleApiKeyAuthentication':
+            case 'WC_Coinbase_SimpleApiKeyAuthentication':
                 // Use Simple API key
                 // Warning! This authentication mechanism is deprecated
                 $headers[] = 'Authorization: api_key ' . $auth->apiKey;
                 break;
 
             default:
-                throw new Coinbase_ApiException("Invalid authentication mechanism");
+                throw new WC_Coinbase_ApiException("Invalid authentication mechanism");
                 break;
         }
 
@@ -98,15 +98,15 @@ class Coinbase_Rpc
         try {
             $json = json_decode($response['body']);
         } catch (Exception $e) {
-            throw new Coinbase_ConnectionException("Invalid response body", $response['statusCode'], $response['body']);
+            throw new WC_Coinbase_ConnectionException("Invalid response body", $response['statusCode'], $response['body']);
         }
         if($json === null) {
-            throw new Coinbase_ApiException("Invalid response body", $response['statusCode'], $response['body']);
+            throw new WC_Coinbase_ApiException("Invalid response body", $response['statusCode'], $response['body']);
         }
         if(isset($json->error)) {
-            throw new Coinbase_ApiException($json->error, $response['statusCode'], $response['body']);
+            throw new WC_Coinbase_ApiException($json->error, $response['statusCode'], $response['body']);
         } else if(isset($json->errors)) {
-            throw new Coinbase_ApiException(implode($json->errors, ', '), $response['statusCode'], $response['body']);
+            throw new WC_Coinbase_ApiException(implode($json->errors, ', '), $response['statusCode'], $response['body']);
         }
 
         return $json;

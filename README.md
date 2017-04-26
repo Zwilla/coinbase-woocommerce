@@ -9,7 +9,7 @@ First generate an API key with the 'user' and 'merchant' permissions at https://
 
 To install the plugin:
 
-1. [Download](https://github.com/coinbase/coinbase-woocommerce/archive/master.zip) the plugin as a .zip file.
+1. [Download](https://github.com/Zwilla/coinbase-woocommerce.git) the plugin as a .zip file.
 2. In your WordPress administration console, navigate to Plugins > Add New > Upload. ![Upload](http://i.imgur.com/5TEbBaF.png)
 3. Upload the .zip file downloaded in step 1.
 4. Click 'Install Now' and then 'Activate Plugin.' ![Activate](http://i.imgur.com/j8IzyJm.png)

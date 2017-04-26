@@ -1,5 +1,5 @@
 <?php
 
-class Coinbase_ConnectionException extends Coinbase_Exception
+class WC_Coinbase_ConnectionException extends WC_Coinbase_Exception
 {
 }

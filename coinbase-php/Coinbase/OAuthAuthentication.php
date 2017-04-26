@@ -1,6 +1,6 @@
 <?php
-
-class Coinbase_OAuthAuthentication extends Coinbase_Authentication
+//@coauthor      Miguel Padilla (Zwilla) Copyright 2017
+class WC_Coinbase_OAuthAuthentication extends WC_Coinbase_Authentication
 {
     private $_oauth;
     private $_tokens;

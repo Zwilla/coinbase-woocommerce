@@ -1,6 +1,6 @@
 <?php
-
-class Coinbase_SimpleApiKeyAuthentication extends Coinbase_Authentication
+//@coauthor      Miguel Padilla (Zwilla) Copyright 2017
+class WC_Coinbase_SimpleApiKeyAuthentication extends WC_Coinbase_Authentication
 {
     private $_apiKey;
 

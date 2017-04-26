@@ -11,7 +11,7 @@
  */
 
 /*  Copyright 2014 Coinbase Inc.
-
+    coAuthor: Miguel Padilla (Zwilla) Copyright 2017
 MIT License
 
 Permission is hereby granted, free of charge, to any person obtaining
@@ -55,13 +55,14 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
 		 * @extends     WC_Payment_Gateway
 		 * @version     2.0.1
 		 * @author      Coinbase Inc.
+         * @coauthor      Miguel Padilla (Zwilla) Copyright 2017
 		 */
 		class WC_Gateway_Coinbase extends WC_Payment_Gateway {
-			var $notify_url;
+			public $notify_url;
 
 			public function __construct() {
 				$this->id   = 'coinbase';
-				$this->icon = WP_PLUGIN_URL . "/" . plugin_basename(dirname(__FILE__)) . '/coinbase.png';
+				$this->icon = WP_PLUGIN_URL . '/' . plugin_basename(__DIR__) . '/coinbase.png';
 
 				$this->has_fields        = false;
 				$this->order_button_text = __('Proceed to Coinbase', 'coinbase-woocommerce');
@@ -104,11 +105,15 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
 				echo '</table>';
 			}
 
-			function process_admin_options() {
+            /**
+             * @return bool|void
+             */
+            public function process_admin_options() {
 				if (!parent::process_admin_options())
-					return false;
+					return;
 
-				require_once(plugin_dir_path(__FILE__) . 'coinbase-php' . DIRECTORY_SEPARATOR . 'Coinbase.php');
+                require_once __DIR__ . '/coinbase-php/Coinbase.php';
+				//require_once plugin_dir_path(__FILE__) . 'coinbase-php' . DIRECTORY_SEPARATOR . 'Coinbase.php';
 
 				$api_key    = $this->get_option('apiKey');
 				$api_secret = $this->get_option('apiSecret');
@@ -128,7 +133,10 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
 				}
 			}
 
-			function construct_notify_url() {
+            /**
+             * @return string
+             */
+            public function construct_notify_url() {
 				$callback_secret = get_option("coinbase_callback_secret");
 				if ($callback_secret == false) {
 					$callback_secret = sha1(openssl_random_pseudo_bytes(20));
@@ -139,7 +147,7 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
 				return $notify_url;
 			}
 
-			function init_form_fields() {
+			public function init_form_fields() {
 				$this->form_fields = array(
 					'enabled' => array(
 						'title' => __('Enable Coinbase plugin', 'coinbase-woocommerce'),
@@ -158,7 +166,7 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
 						'type'        => 'textarea',
 						'description' => __( 'This controls the description which the user sees during checkout.', 'woocommerce' ),
 						'default'     => __('Pay with bitcoin, a virtual currency.', 'coinbase-woocommerce')
-											. " <a href='http://bitcoin.org/' target='_blank'>"
+											. " <a href='https://bitcoin.org/' target='_blank'>"
 											. __('What is bitcoin?', 'coinbase-woocommerce')
 											. "</a>"
 	             	),
@@ -175,9 +183,9 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
 				);
 			}
 
-			function process_payment($order_id) {
+			public function process_payment($order_id) {
 
-				require_once(plugin_dir_path(__FILE__) . 'coinbase-php' . DIRECTORY_SEPARATOR . 'Coinbase.php');
+                require_once __DIR__ . '/coinbase-php/Coinbase.php';
 				global $woocommerce;
 
 				$order = new WC_Order($order_id);
@@ -209,7 +217,7 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
 					} else {
 						$woocommerce->add_error(__('Sorry, but there was an error processing your order. Please try again or try a different payment method. (plugin not configured)', 'coinbase-woocommerce'));
 					}
-					return;
+					return false;
 				}
 
 				try {
@@ -223,7 +231,7 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
 					} else {
 						$woocommerce->add_error(__('Sorry, but there was an error processing your order. Please try again or try a different payment method.', 'coinbase-woocommerce'));
 					}
-					return;
+					return false;
 				}
 
 				return array(
@@ -232,7 +240,7 @@ if (in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_
 				);
 			}
 
-			function check_coinbase_callback() {
+			public function check_coinbase_callback() {
 				$callback_secret = get_option("coinbase_callback_secret");
 				if ($callback_secret != false && $callback_secret == $_REQUEST['callback_secret']) {
 					$post_body = json_decode(file_get_contents("php://input"));

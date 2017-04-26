@@ -1,6 +1,6 @@
 <?php
-
-class Coinbase
+//@coauthor      Miguel Padilla (Zwilla) Copyright 2017
+class WC_Coinbase
 {
     const API_BASE = 'https://coinbase.com/api/v1/';
     private $_rpc;
@@ -9,24 +9,24 @@ class Coinbase
 
     public static function withApiKey($key, $secret)
     {
-        return new Coinbase(new Coinbase_ApiKeyAuthentication($key, $secret));
+        return new WC_Coinbase(new WC_Coinbase_ApiKeyAuthentication($key, $secret));
     }
 
     public static function withSimpleApiKey($key)
     {
-        return new Coinbase(new Coinbase_SimpleApiKeyAuthentication($key));
+        return new WC_Coinbase(new WC_Coinbase_SimpleApiKeyAuthentication($key));
     }
 
     public static function withOAuth($oauth, $tokens)
     {
-        return new Coinbase(new Coinbase_OAuthAuthentication($oauth, $tokens));
+        return new WC_Coinbase(new WC_Coinbase_OAuthAuthentication($oauth, $tokens));
     }
 
     // This constructor is deprecated.
     public function __construct($authentication, $tokens=null, $apiKeySecret=null)
     {
         // First off, check for a legit authentication class type
-        if (is_a($authentication, 'Coinbase_Authentication')) {
+        if (is_a($authentication, 'WC_Coinbase_Authentication')) {
             $this->_authentication = $authentication;
         } else {
             // Here, $authentication was not a valid authentication object, so
@@ -35,27 +35,27 @@ class Coinbase
             // In older versions of this library, the first parameter of this constructor
             // can be either an API key string or an OAuth object.
             if ($tokens !== null) {
-                $this->_authentication = new Coinbase_OAuthAuthentication($authentication, $tokens);
+                $this->_authentication = new WC_Coinbase_OAuthAuthentication($authentication, $tokens);
             } else if ($authentication !== null && is_string($authentication)) {
                 $apiKey = $authentication;
                 if ($apiKeySecret === null) {
                     // Simple API key
-                    $this->_authentication = new Coinbase_SimpleApiKeyAuthentication($apiKey);
+                    $this->_authentication = new WC_Coinbase_SimpleApiKeyAuthentication($apiKey);
                 } else {
-                    $this->_authentication = new Coinbase_ApiKeyAuthentication($apiKey, $apiKeySecret);
+                    $this->_authentication = new WC_Coinbase_ApiKeyAuthentication($apiKey, $apiKeySecret);
                 }
             } else {
-                throw new Coinbase_ApiException('Could not determine API authentication scheme');
+                throw new WC_Coinbase_ApiException('Could not determine API authentication scheme');
             }
         }
 
-        $this->_rpc = new Coinbase_Rpc(new Coinbase_Requestor(), $this->_authentication);
+        $this->_rpc = new WC_Coinbase_Rpc(new WC_Coinbase_Requestor(), $this->_authentication);
     }
 
     // Used for unit testing only
     public function setRequestor($requestor)
     {
-        $this->_rpc = new Coinbase_Rpc($requestor, $this->_authentication);
+        $this->_rpc = new WC_Coinbase_Rpc($requestor, $this->_authentication);
         return $this;
     }
 

@@ -1,6 +1,6 @@
 <?php
-
-class Coinbase_Exception extends Exception
+//@coauthor      Miguel Padilla (Zwilla) Copyright 2017
+class WC_Coinbase_Exception extends Exception
 {
     public function __construct($message, $http_code=null, $response=null)
     {
