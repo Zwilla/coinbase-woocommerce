@@ -1,7 +1,13 @@
 coinbase-woocommerce
 ====================
 
-Accept Bitcoin on your WooCommerce-powered website with Coinbase.
+
+
+Accept Bitcoin Payments on your WooCommerce-powered website with Coinbase.
+
+Support and donations send here: 14eXchD66u5S5yRbPkEVp2QXQ8KHiSUVwh
+
+Open account at Coinbase: https://www.coinbase.com/join/5680ac10b2acbc6f38000120
 
 ## Installation
 
